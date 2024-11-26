@@ -1,14 +1,26 @@
-const mysql = require('mysql2');
+const { Sequelize } = require('sequelize');
 
-// Создание подключения к базе данных MySQL
-const pool = mysql.createPool({
-  host: process.env.DB_HOST || 'localhost',
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || 'my-secret-pw',
-  database: process.env.DB_NAME || 'TravelAgency',
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
-});
+// Environment variables for database configuration
+const sequelize = new Sequelize(
+  process.env.MYSQL_DATABASE || 'mydatabase', // Database name
+  process.env.MYSQL_USER || 'root', // Username
+  process.env.MYSQL_PASSWORD || 'rootpassword', // Password
+  {
+    host: process.env.MYSQL_HOST || 'db', // Hostname (from docker-compose)
+    dialect: 'mysql', // Database dialect
+    port: 3306, // MySQL default port
+    logging: false, // Disable SQL logging
+  },
+);
 
-module.exports = pool;
+// Test the connection
+(async () => {
+  try {
+    await sequelize.authenticate();
+    console.log('Connection to the MySQL database has been established successfully.');
+  } catch (error) {
+    console.error('Unable to connect to the database:', error);
+  }
+})();
+
+module.exports = sequelize;

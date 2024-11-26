@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const usersRoutes = require('./routes/users');
+const sequelize = require('./db'); // Import the Sequelize instance
 require('dotenv').config();
 
 const app = express();
@@ -14,5 +15,5 @@ app.use('/api/users', usersRoutes);
 
 // Запуск сервера
 app.listen(PORT, () => {
-  console.log(`Сервер запущен на http://localhost:${PORT}`);
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
