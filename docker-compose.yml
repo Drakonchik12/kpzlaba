@@ -1,21 +1,32 @@
-version: "3.8"
+version: '3.8'
+
 services:
-  travel_agency_db:
-    image: mysql:8.0
-    container_name: travel_agency_db
-    environment:
-      MYSQL_ROOT_PASSWORD: my-secret-pw
-      MYSQL_DATABASE: TravelAgency
+  node-app:
+    build:
+      context: . # Build from the current directory
+      dockerfile: Dockerfile
     ports:
-      - "3307:3306"  # Изменено на 3307
+      - "3000:3000" # Map container port 3000 to host port 3000
+    environment:
+      - MYSQL_HOST=db
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=rootpassword
+      - MYSQL_DATABASE=mydatabase
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0 # Use the MySQL 8.0 image
+    container_name: mysql-db
+    restart: always
+    ports:
+      - "3307:3306" # Map container port 3306 to host port 3306
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: mydatabase
+      MYSQL_PASSWORD: rootpassword
     volumes:
-      - travel_agency_db_data:/var/lib/mysql
-    networks:
-      - travel_agency_network
+      - db_data:/var/lib/mysql # Persist MySQL data
 
 volumes:
-  travel_agency_db_data:
-
-networks:
-  travel_agency_network:
-    driver: bridge
+  db_data:
