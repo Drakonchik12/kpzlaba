@@ -1,0 +1,21 @@
+version: "3.8"
+services:
+  travel_agency_db:
+    image: mysql:8.0
+    container_name: travel_agency_db
+    environment:
+      MYSQL_ROOT_PASSWORD: my-secret-pw
+      MYSQL_DATABASE: TravelAgency
+    ports:
+      - "3307:3306"  # Изменено на 3307
+    volumes:
+      - travel_agency_db_data:/var/lib/mysql
+    networks:
+      - travel_agency_network
+
+volumes:
+  travel_agency_db_data:
+
+networks:
+  travel_agency_network:
+    driver: bridge
